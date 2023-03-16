@@ -63,7 +63,6 @@ export class Game {
 
     document.addEventListener("touchend", (event) => {
       event.preventDefault();
-      clearTimeout(holdDropTimeout); // Cancel the hold drop if touch ends
 
       const touchEndX = event.changedTouches[0].clientX;
       const touchEndY = event.changedTouches[0].clientY;
@@ -103,7 +102,7 @@ export class Game {
           }
         }, 300); // 300ms delay to handle single tap actions
       }
-    }); // Add a closing curly bracket here
+    });
   }
 
   update() {
