@@ -45,6 +45,8 @@ export class Game {
     });
 
     let touchStartX, touchStartY, touchStartTime;
+    let tapCount = 0;
+    let lastTapTime = 0;
 
     document.addEventListener("touchmove", (event) => {
       event.preventDefault();
@@ -63,15 +65,24 @@ export class Game {
       const touchEndY = event.changedTouches[0].clientY;
       const touchDuration = Date.now() - touchStartTime; // Calculate the touch duration
 
-      const deltaX = touchEndX - touchStartX;
-      const deltaY = touchEndY - touchStartY;
+      // Check for double-tap
+      const currentTime = Date.now();
+      if (currentTime - lastTapTime < 300) {
+        // 300ms threshold for double-tap
+        tapCount += 1;
+      } else {
+        tapCount = 1;
+      }
+      lastTapTime = currentTime;
 
-      // If touch duration is longer than a second, activate fast drop
-      if (touchDuration > 400) {
+      if (tapCount === 2) {
         while (!this.board.hasCollision(this.tetrimino, 0, 1)) {
           this.moveTetrimino(0, 1);
         }
       } else {
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
           if (deltaX > 0) {
             this.moveTetrimino(1, 0);
