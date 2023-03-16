@@ -43,6 +43,35 @@ export class Game {
           break;
       }
     });
+
+    let touchStartX, touchStartY;
+
+    document.addEventListener("touchstart", (event) => {
+      touchStartX = event.touches[0].clientX;
+      touchStartY = event.touches[0].clientY;
+    });
+
+    document.addEventListener("touchend", (event) => {
+      const touchEndX = event.changedTouches[0].clientX;
+      const touchEndY = event.changedTouches[0].clientY;
+
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0) {
+          this.moveTetrimino(1, 0);
+        } else {
+          this.moveTetrimino(-1, 0);
+        }
+      } else {
+        if (deltaY > 0) {
+          this.moveTetrimino(0, 1);
+        } else {
+          this.rotateTetrimino();
+        }
+      }
+    });
   }
 
   update() {
