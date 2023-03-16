@@ -67,7 +67,7 @@ export class Game {
       const deltaY = touchEndY - touchStartY;
 
       // If touch duration is longer than a second, activate fast drop
-      if (touchDuration > 1000) {
+      if (touchDuration > 400) {
         while (!this.board.hasCollision(this.tetrimino, 0, 1)) {
           this.moveTetrimino(0, 1);
         }
