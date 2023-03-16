@@ -44,31 +44,40 @@ export class Game {
       }
     });
 
-    let touchStartX, touchStartY;
+    let touchStartX, touchStartY, touchStartTime;
 
     document.addEventListener("touchstart", (event) => {
       touchStartX = event.touches[0].clientX;
       touchStartY = event.touches[0].clientY;
+      touchStartTime = Date.now(); // Record the touch start time
     });
 
     document.addEventListener("touchend", (event) => {
       const touchEndX = event.changedTouches[0].clientX;
       const touchEndY = event.changedTouches[0].clientY;
+      const touchDuration = Date.now() - touchStartTime; // Calculate the touch duration
 
       const deltaX = touchEndX - touchStartX;
       const deltaY = touchEndY - touchStartY;
 
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        if (deltaX > 0) {
-          this.moveTetrimino(1, 0);
-        } else {
-          this.moveTetrimino(-1, 0);
+      // If touch duration is longer than a second, activate fast drop
+      if (touchDuration > 1000) {
+        while (!this.board.hasCollision(this.tetrimino, 0, 1)) {
+          this.moveTetrimino(0, 1);
         }
       } else {
-        if (deltaY > 0) {
-          this.moveTetrimino(0, 1);
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          if (deltaX > 0) {
+            this.moveTetrimino(1, 0);
+          } else {
+            this.moveTetrimino(-1, 0);
+          }
         } else {
-          this.rotateTetrimino();
+          if (deltaY > 0) {
+            this.moveTetrimino(0, 1);
+          } else {
+            this.rotateTetrimino();
+          }
         }
       }
     });
