@@ -46,13 +46,19 @@ export class Game {
 
     let touchStartX, touchStartY, touchStartTime;
 
+    document.addEventListener("touchmove", (event) => {
+      event.preventDefault();
+    });
+
     document.addEventListener("touchstart", (event) => {
+      event.preventDefault();
       touchStartX = event.touches[0].clientX;
       touchStartY = event.touches[0].clientY;
       touchStartTime = Date.now(); // Record the touch start time
     });
 
     document.addEventListener("touchend", (event) => {
+      event.preventDefault();
       const touchEndX = event.changedTouches[0].clientX;
       const touchEndY = event.changedTouches[0].clientY;
       const touchDuration = Date.now() - touchStartTime; // Calculate the touch duration
