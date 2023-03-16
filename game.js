@@ -59,11 +59,14 @@ export class Game {
       touchStartTime = Date.now(); // Record the touch start time
     });
 
+    let singleTapTimeout;
+
     document.addEventListener("touchend", (event) => {
       event.preventDefault();
+      clearTimeout(holdDropTimeout); // Cancel the hold drop if touch ends
+
       const touchEndX = event.changedTouches[0].clientX;
       const touchEndY = event.changedTouches[0].clientY;
-      const touchDuration = Date.now() - touchStartTime; // Calculate the touch duration
 
       // Check for double-tap
       const currentTime = Date.now();
@@ -76,28 +79,31 @@ export class Game {
       lastTapTime = currentTime;
 
       if (tapCount === 2) {
+        clearTimeout(singleTapTimeout); // Cancel single tap action if double-tap detected
         while (!this.board.hasCollision(this.tetrimino, 0, 1)) {
           this.moveTetrimino(0, 1);
         }
       } else {
-        const deltaX = touchEndX - touchStartX;
-        const deltaY = touchEndY - touchStartY;
+        singleTapTimeout = setTimeout(() => {
+          const deltaX = touchEndX - touchStartX;
+          const deltaY = touchEndY - touchStartY;
 
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-          if (deltaX > 0) {
-            this.moveTetrimino(1, 0);
+          if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            if (deltaX > 0) {
+              this.moveTetrimino(1, 0);
+            } else {
+              this.moveTetrimino(-1, 0);
+            }
           } else {
-            this.moveTetrimino(-1, 0);
+            if (deltaY > 0) {
+              this.moveTetrimino(0, 1);
+            } else {
+              this.rotateTetrimino();
+            }
           }
-        } else {
-          if (deltaY > 0) {
-            this.moveTetrimino(0, 1);
-          } else {
-            this.rotateTetrimino();
-          }
-        }
+        }, 300); // 300ms delay to handle single tap actions
       }
-    });
+    }); // Add a closing curly bracket here
   }
 
   update() {
