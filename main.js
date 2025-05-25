@@ -8,4 +8,4 @@ document.getElementById("startGame").addEventListener("click", () => {
   game.start();
 });
 
-game.start();
+// game.start();
