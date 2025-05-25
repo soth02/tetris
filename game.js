@@ -166,11 +166,43 @@ export class Game {
   }
 
   rotateTetrimino() {
-    const oldRotation = this.tetrimino.rotation;
+    // 1. Deep copy the current tetrimino matrix
+    const originalMatrix = JSON.parse(JSON.stringify(this.tetrimino.matrix));
+    // It's also good practice to save original x,y in case all kicks fail,
+    // though the current problem description only asks to revert matrix.
+    // const originalX = this.tetrimino.x;
+    // const originalY = this.tetrimino.y;
+
+    // 2. Call rotate() to change the tetrimino's internal matrix
     this.tetrimino.rotate();
-    if (this.board.hasCollision(this.tetrimino)) {
-      this.tetrimino.rotation = oldRotation;
+
+    // 3. Check for collision at the new orientation without any kick
+    if (!this.board.hasCollision(this.tetrimino, 0, 0)) { // Check with (0,0) offset
+      return; // No collision, rotation successful
     }
+
+    // 4. If there is a collision, attempt wall kicks.
+    const kicks = [0, 1, -1, 2, -2]; // Kicks to try (0 is already checked effectively)
+
+    for (const kickX of kicks) {
+      // a. If kickX === 0, we've already checked this state (no offset) and it collided.
+      if (kickX === 0) {
+        continue;
+      }
+
+      // b. Check if (!this.board.hasCollision(this.tetrimino, kickX, 0))
+      if (!this.board.hasCollision(this.tetrimino, kickX, 0)) {
+        // c. If no collision with the kick, apply the kick and return
+        this.tetrimino.x += kickX;
+        return; // Rotation successful with kick
+      }
+    }
+
+    // 5. If all kicks fail, revert the tetrimino's matrix to the originalMatrix
+    this.tetrimino.matrix = originalMatrix;
+    // If originalX/Y were saved:
+    // this.tetrimino.x = originalX;
+    // this.tetrimino.y = originalY;
   }
 
   gameOver() {

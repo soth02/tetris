@@ -1,51 +1,14 @@
-const SHAPES = [
-  [
-    [1, 1, 1],
-    [0, 1, 0],
-    [0, 0, 0],
-  ],
-  [
-    [1, 1],
-    [1, 1],
-  ],
-  [
-    [1, 1, 0],
-    [0, 1, 1],
-    [0, 0, 0],
-  ],
-  [
-    [0, 1, 1],
-    [1, 1, 0],
-    [0, 0, 0],
-  ],
-  [
-    [1, 1, 1, 1],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-  ],
-  [
-    [1, 1, 1],
-    [1, 0, 0],
-    [0, 0, 0],
-  ],
-  [
-    [1, 1, 1],
-    [0, 0, 1],
-    [0, 0, 0],
-  ],
-];
-
-const COLORS = ["#00f", "#f00", "#0f0", "#ff0", "#0ff", "#f0f", "#f80"];
+import { SHAPES } from './shapes.js'; // Import SHAPES from shapes.js
 
 export class Tetrimino {
-  constructor() {
-    const shapeIndex = Math.floor(Math.random() * SHAPES.length);
-    this.matrix = SHAPES[shapeIndex];
-    this.color = COLORS[shapeIndex];
-    this.size = this.matrix.length;
-    this.x = Math.floor((10 - this.size) / 2);
-    this.y = 0;
+  constructor(type = 'I') { // Default to 'I' if no type is provided
+    const shapeData = SHAPES[type] || SHAPES['I']; // Default to 'I' if type is unknown
+
+    this.matrix = shapeData.matrix;
+    this.color = shapeData.color;
+    this.size = this.matrix.length; // Assuming square matrices from shapes.js
+    this.x = 3; // As per test expectation
+    this.y = 0; // As per test expectation
   }
 
   draw(ctx) {

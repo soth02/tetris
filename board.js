@@ -1,8 +1,8 @@
 export class Board {
-  constructor() {
-    this.width = 10;
-    this.height = 20;
-    this.cellSize = 32;
+  constructor(width = 10, height = 20) {
+    this.width = width;
+    this.height = height;
+    this.cellSize = 32; // This could also be a parameter if needed
     this.grid = this.createEmptyGrid();
   }
 
@@ -65,6 +65,7 @@ export class Board {
   }
 
   clearLines() {
+    let linesCleared = 0;
     outer: for (let y = this.height - 1; y >= 0; ) {
       for (let x = 0; x < this.width; x++) {
         if (!this.grid[y][x]) {
@@ -75,6 +76,10 @@ export class Board {
 
       this.grid.splice(y, 1);
       this.grid.unshift(Array(this.width).fill(0));
+      linesCleared++;
+      // y does not decrement here because the rows shifted down,
+      // so the same y index needs to be checked again.
     }
+    return linesCleared;
   }
 }
