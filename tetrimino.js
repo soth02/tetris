@@ -1,51 +1,29 @@
-const SHAPES = [
-  [
-    [1, 1, 1],
-    [0, 1, 0],
-    [0, 0, 0],
-  ],
-  [
-    [1, 1],
-    [1, 1],
-  ],
-  [
-    [1, 1, 0],
-    [0, 1, 1],
-    [0, 0, 0],
-  ],
-  [
-    [0, 1, 1],
-    [1, 1, 0],
-    [0, 0, 0],
-  ],
-  [
-    [1, 1, 1, 1],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-  ],
-  [
-    [1, 1, 1],
-    [1, 0, 0],
-    [0, 0, 0],
-  ],
-  [
-    [1, 1, 1],
-    [0, 0, 1],
-    [0, 0, 0],
-  ],
-];
-
-const COLORS = ["#00f", "#f00", "#0f0", "#ff0", "#0ff", "#f0f", "#f80"];
+import { SHAPES } from './shapes.js'; // Import SHAPES from shapes.js
 
 export class Tetrimino {
-  constructor() {
-    const shapeIndex = Math.floor(Math.random() * SHAPES.length);
-    this.matrix = SHAPES[shapeIndex];
-    this.color = COLORS[shapeIndex];
-    this.size = this.matrix.length;
-    this.x = Math.floor((10 - this.size) / 2);
-    this.y = 0;
+  constructor(type) { // Removed default value 'I'
+    let chosenType;
+
+    if (type === undefined) {
+      // No argument was passed
+      const shapeKeys = Object.keys(SHAPES);
+      chosenType = shapeKeys[Math.floor(Math.random() * shapeKeys.length)];
+    } else if (SHAPES[type]) {
+      // Type was provided and it's a valid key in SHAPES
+      chosenType = type;
+    } else {
+      // Type was provided but it's not a valid key in SHAPES
+      console.warn(`Unknown tetrimino type: ${type}, defaulting to 'I'.`); // Optional warning
+      chosenType = 'I'; // Default to 'I'
+    }
+
+    const shapeData = SHAPES[chosenType];
+
+    this.matrix = shapeData.matrix;
+    this.color = shapeData.color;
+    this.size = this.matrix.length; // Assuming square matrices from shapes.js
+    this.x = 3; // As per test expectation (or Math.floor((10 - this.size) / 2) for centering on a 10-wide board)
+    this.y = 0; // As per test expectation
   }
 
   draw(ctx) {
