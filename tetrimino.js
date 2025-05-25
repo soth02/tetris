@@ -1,13 +1,28 @@
 import { SHAPES } from './shapes.js'; // Import SHAPES from shapes.js
 
 export class Tetrimino {
-  constructor(type = 'I') { // Default to 'I' if no type is provided
-    const shapeData = SHAPES[type] || SHAPES['I']; // Default to 'I' if type is unknown
+  constructor(type) { // Removed default value 'I'
+    let chosenType;
+
+    if (type === undefined) {
+      // No argument was passed
+      const shapeKeys = Object.keys(SHAPES);
+      chosenType = shapeKeys[Math.floor(Math.random() * shapeKeys.length)];
+    } else if (SHAPES[type]) {
+      // Type was provided and it's a valid key in SHAPES
+      chosenType = type;
+    } else {
+      // Type was provided but it's not a valid key in SHAPES
+      console.warn(`Unknown tetrimino type: ${type}, defaulting to 'I'.`); // Optional warning
+      chosenType = 'I'; // Default to 'I'
+    }
+
+    const shapeData = SHAPES[chosenType];
 
     this.matrix = shapeData.matrix;
     this.color = shapeData.color;
     this.size = this.matrix.length; // Assuming square matrices from shapes.js
-    this.x = 3; // As per test expectation
+    this.x = 3; // As per test expectation (or Math.floor((10 - this.size) / 2) for centering on a 10-wide board)
     this.y = 0; // As per test expectation
   }
 
