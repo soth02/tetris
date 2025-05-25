@@ -121,4 +121,23 @@ describe('Tetrimino', () => {
       expect(tetrimino.size).toBe(originalMatrix.length);
     });
   });
+
+  describe('random shape generation', () => {
+    it('should generate a variety of shapes when no type is specified', () => {
+      const numberOfTrials = 100;
+      const minimumUniqueShapesExpected = 5; // There are 7 shapes in SHAPES
+      // If random selection is good, we expect to see at least 5 unique ones in 100 trials.
+      // (Probability of not seeing a specific shape in 100 trials, if 1/7 chance: (6/7)^100 is very small)
+
+      const uniqueColors = new Set();
+
+      for (let i = 0; i < numberOfTrials; i++) {
+        const tetrimino = new Tetrimino(); // Constructor with no argument
+        uniqueColors.add(tetrimino.color);
+      }
+
+      // Check if the number of unique colors (representing unique shapes) meets the expectation
+      expect(uniqueColors.size).toBeGreaterThanOrEqual(minimumUniqueShapesExpected);
+    });
+  });
 });
