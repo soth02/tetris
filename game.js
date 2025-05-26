@@ -181,9 +181,28 @@ export class Game {
       // --- END DEFENSIVE CLAMP ---
       this.board.mergeTetrimino(this.tetrimino);
       this.board.clearLines();
-      this.tetrimino = new Tetrimino();
+      this.tetrimino = new Tetrimino(); // New piece is spawned
 
-      if (this.board.hasCollision(this.tetrimino)) {
+      // --- BEGIN GAME OVER CHECK DIAGNOSTICS ---
+      console.log("--- GAME OVER CHECK DIAGNOSTICS ---");
+      console.log("New Tetrimino X:", this.tetrimino.x);
+      console.log("New Tetrimino Y:", this.tetrimino.y);
+      console.log("New Tetrimino Size:", this.tetrimino.size);
+      console.log("New Tetrimino Matrix:", JSON.stringify(this.tetrimino.matrix));
+      console.log("Board Grid (Top 4 Rows):");
+      if (this.board && this.board.grid) {
+        for (let i = 0; i < 4 && i < this.board.grid.length; i++) {
+          console.log(`Row ${i}:`, JSON.stringify(this.board.grid[i]));
+        }
+      }
+      // Note: The result of hasCollision might be different if the tetrimino chosen by new Tetrimino() is random
+      // and happens to be one that fits vs one that doesn't.
+      // For consistent diagnostics in a specific scenario, one might need to temporarily fix the new Tetrimino type.
+      console.log("Upcoming Collision Check Result for New Tetrimino:", this.board.hasCollision(this.tetrimino));
+      console.log("--- END DIAGNOSTICS ---");
+      // --- END GAME OVER CHECK DIAGNOSTICS ---
+
+      if (this.board.hasCollision(this.tetrimino)) { // GAME OVER CHECK
         this.gameOver();
       }
     }
