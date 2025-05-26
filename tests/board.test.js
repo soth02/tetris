@@ -244,6 +244,51 @@ describe('Board', () => {
       // This should collide because boardY >= board.height (20 >= 20).
       expect(board.hasCollision(tetrimino, 0, 1)).toBe(true);
     });
+
+    it('should detect collision when a new tetrimino spawns into an obstructed area at the top', () => {
+      const board = new Board(10, 20);
+      // T-shape matrix:
+      // [[0, 1, 0],
+      //  [1, 1, 1],
+      //  [0, 0, 0]]
+      // Spawns at x=3, y=0. Occupied cells relative to tetrimino's (x,y):
+      // matrix[0][1] => (x+1, y+0) => (3+1, 0+0) => (4,0)
+      // matrix[1][0] => (x+0, y+1) => (3+0, 0+1) => (3,1)
+      // matrix[1][1] => (x+1, y+1) => (3+1, 0+1) => (4,1)
+      // matrix[1][2] => (x+2, y+1) => (3+2, 0+1) => (5,1)
+      const tShapeMatrix = [
+        [0, 1, 0],
+        [1, 1, 1],
+        [0, 0, 0]
+      ];
+      const newTetrimino = {
+        matrix: tShapeMatrix,
+        size: 3,
+        x: 3, // Default spawn x for many Tetris games
+        y: 0  // Default spawn y
+      };
+
+      // Scenario 1: Spawn area is obstructed
+      // Obstruct a cell that the T-shape's middle-bottom block (matrix[1][1]) would occupy.
+      // This corresponds to board.grid[y+1][x+1] = board.grid[0+1][3+1] = board.grid[1][4]
+      board.grid[1][4] = 'blue'; // Occupy one of the cells
+      expect(board.hasCollision(newTetrimino)).toBe(true);
+
+      // Obstruct another cell that the T-shape's top-middle block (matrix[0][1]) would occupy.
+      // This corresponds to board.grid[y+0][x+1] = board.grid[0+0][3+1] = board.grid[0][4]
+      board.grid[0][4] = 'red';
+      expect(board.hasCollision(newTetrimino)).toBe(true);
+
+
+      // Scenario 2: Spawn area is clear
+      // Clear the obstructed cells
+      board.grid[1][4] = 0;
+      board.grid[0][4] = 0;
+      // Also ensure other potentially conflicting cells are clear for the T-shape
+      board.grid[1][3] = 0;
+      board.grid[1][5] = 0;
+      expect(board.hasCollision(newTetrimino)).toBe(false);
+    });
   });
 
   describe('mergeTetrimino', () => {
