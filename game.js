@@ -155,6 +155,30 @@ export class Game {
       this.tetrimino.x += deltaX;
       this.tetrimino.y += deltaY;
     } else if (deltaY > 0) {
+      // --- BEGIN DEFENSIVE CLAMP ---
+      // Find the lowest actual block in the tetrimino's matrix.
+      let maxBlockMatrixY = 0; // Stores the largest y-index of a '1' in the matrix
+      if (this.tetrimino && this.tetrimino.matrix && this.tetrimino.size > 0) {
+        for (let r = 0; r < this.tetrimino.size; r++) {
+          for (let c = 0; c < this.tetrimino.size; c++) {
+            if (this.tetrimino.matrix[r][c]) {
+              maxBlockMatrixY = Math.max(maxBlockMatrixY, r);
+            }
+          }
+        }
+      }
+
+      // Calculate the absolute Y position of the lowest block of the tetrimino.
+      const lowestBlockAbsY = this.tetrimino.y + maxBlockMatrixY;
+
+      // If this lowest block is at or beyond the board height, adjust tetrimino.y.
+      if (lowestBlockAbsY >= this.board.height) {
+        const originalY = this.tetrimino.y;
+        this.tetrimino.y = this.board.height - 1 - maxBlockMatrixY;
+        // It's helpful to know if this clamp is ever triggered.
+        console.warn(`Defensive clamp: Adjusted tetrimino.y from ${originalY} to ${this.tetrimino.y} before merge.`);
+      }
+      // --- END DEFENSIVE CLAMP ---
       this.board.mergeTetrimino(this.tetrimino);
       this.board.clearLines();
       this.tetrimino = new Tetrimino();

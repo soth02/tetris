@@ -227,6 +227,23 @@ describe('Board', () => {
       tetrimino.x = 0;
       expect(board.hasCollision(tetrimino)).toBe(false);
     });
+
+    it('should detect collision when a piece at the floor attempts to move down', () => {
+      const board = new Board(10, 20);
+      const tetrimino = {
+        matrix: [[1]], // A single block
+        size: 1,
+        x: 0, // At the left edge
+        y: board.height - 1 // Positioned at the last row (y=19 for height 20)
+      };
+
+      // Attempt to move down by 1 unit (deltaY = 1)
+      // The block is at matrix[0][0].
+      // Its current boardY = tetrimino.y + 0 (local y) = 19.
+      // If moved down by 1 (offsetY = 1), its new boardY = tetrimino.y + 0 (local y) + 1 (offsetY) = 19 + 0 + 1 = 20.
+      // This should collide because boardY >= board.height (20 >= 20).
+      expect(board.hasCollision(tetrimino, 0, 1)).toBe(true);
+    });
   });
 
   describe('mergeTetrimino', () => {
