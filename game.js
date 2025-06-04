@@ -155,11 +155,11 @@ export class Game {
       this.tetrimino.x += deltaX;
       this.tetrimino.y += deltaY;
     } else if (deltaY > 0) {
-      this.board.mergeTetrimino(this.tetrimino);
+      const above = this.board.mergeTetrimino(this.tetrimino);
       this.board.clearLines();
       this.tetrimino = new Tetrimino();
 
-      if (this.board.hasCollision(this.tetrimino)) {
+      if (above || this.board.hasCollision(this.tetrimino)) {
         this.gameOver();
       }
     }

@@ -18,9 +18,9 @@ describe('Tetrimino', () => {
       // Assuming default x is roughly center of board (e.g., boardWidth/2 - size/2)
       // and y is 0.
       // For now, let's check if they are numbers. Specific values depend on board context.
-      // The current tetrimino.js constructor sets x = 3, y = 0.
+      // Pieces spawn completely above the board so they can drop into view
       expect(tetrimino.x).toBe(3);
-      expect(tetrimino.y).toBe(0);
+      expect(tetrimino.y).toBe(-tetrimino.size);
     });
 
     it('should handle unknown shape types gracefully (e.g., default to a specific shape or throw error)', () => {

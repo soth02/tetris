@@ -23,7 +23,8 @@ export class Tetrimino {
     this.color = shapeData.color;
     this.size = this.matrix.length; // Assuming square matrices from shapes.js
     this.x = 3; // As per test expectation (or Math.floor((10 - this.size) / 2) for centering on a 10-wide board)
-    this.y = 0; // As per test expectation
+    // Start completely above the visible board so even the tallest piece is hidden
+    this.y = -this.size;
   }
 
   draw(ctx) {

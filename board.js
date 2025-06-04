@@ -55,13 +55,28 @@ export class Board {
   }
 
   mergeTetrimino(tetrimino) {
+    let aboveVisible = false;
     for (let y = 0; y < tetrimino.size; y++) {
       for (let x = 0; x < tetrimino.size; x++) {
         if (tetrimino.matrix[y][x]) {
-          this.grid[y + tetrimino.y][x + tetrimino.x] = tetrimino.color;
+          const boardY = y + tetrimino.y;
+          const boardX = x + tetrimino.x;
+          if (boardY < 0) {
+            aboveVisible = true;
+            continue; // Skip cells above the visible board
+          }
+          if (
+            boardY >= this.height ||
+            boardX < 0 ||
+            boardX >= this.width
+          ) {
+            continue;
+          }
+          this.grid[boardY][boardX] = tetrimino.color;
         }
       }
     }
+    return aboveVisible;
   }
 
   clearLines() {
