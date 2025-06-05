@@ -9,11 +9,13 @@
 </head>
 <body>
     <h1 class="fancy-title">Tetris</h1>
-    <div class="board-container">
-        <canvas id="nextCanvas" width="128" height="128"></canvas>
-        <canvas id="gameCanvas" width="320" height="640"></canvas>
+    <div class="game-container">
+        <div class="board-container">
+            <canvas id="nextCanvas" width="128" height="128"></canvas>
+            <canvas id="gameCanvas" width="320" height="640"></canvas>
+        </div>
+        <button id="startGame">Start</button>
     </div>
-    <button id="startGame">Start</button>
     <script type="module" src="main.js"></script>
 </body>
 </html>

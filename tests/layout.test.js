@@ -26,4 +26,19 @@ describe('UI layout', () => {
     const title = document.querySelector('h1');
     expect(title.classList.contains('fancy-title')).toBe(true);
   });
+
+  test('start button is positioned after the board container within game-container', () => {
+    const gameContainer = document.querySelector('.game-container');
+    expect(gameContainer).not.toBeNull();
+    const children = Array.from(gameContainer.children);
+    const boardIndex = children.findIndex(el => el.classList.contains('board-container'));
+    const buttonIndex = children.findIndex(el => el.id === 'startGame');
+    expect(boardIndex).toBeLessThan(buttonIndex);
+  });
+
+  test('start button has increased font size in CSS', () => {
+    const css = fs.readFileSync(path.resolve(__dirname, '../style.css'), 'utf8');
+    const rule = /#startGame\s*{[^}]*font-size:\s*2rem;/;
+    expect(rule.test(css)).toBe(true);
+  });
 });

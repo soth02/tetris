@@ -46,14 +46,19 @@ canvas {
     align-items: flex-start;
 }
 
+.game-container {
+    display: flex;
+    align-items: flex-start;
+}
+
 #nextCanvas {
     margin-right: 10px;
 }
 
 #startGame {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 1.2rem;
+    margin-left: 20px;
+    padding: 20px 40px;
+    font-size: 2rem;
     background-color: #28a745;
     color: #fff;
     border: none;
