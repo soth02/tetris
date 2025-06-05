@@ -48,3 +48,7 @@ canvas {
     background-color: black;
     opacity: 1;
 }
+
+#nextCanvas {
+    margin-left: 10px;
+}

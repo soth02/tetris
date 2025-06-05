@@ -2,10 +2,12 @@ import { Board } from "./board.js";
 import { Tetrimino } from "./tetrimino.js";
 
 export class Game {
-  constructor(ctx) {
+  constructor(ctx, previewCtx = null) {
     this.ctx = ctx;
+    this.previewCtx = previewCtx;
     this.board = new Board();
     this.tetrimino = new Tetrimino();
+    this.nextTetrimino = new Tetrimino();
     this.gravityInterval = 500;
     this.lastDropTime = Date.now();
     this.boundKeyDownHandler = null;
@@ -21,7 +23,8 @@ export class Game {
     }
     this.initControls(); // Ensure controls are initialized for a new game
     this.board = new Board();
-    this.tetrimino = new Tetrimino();
+    this.tetrimino = this.nextTetrimino;
+    this.nextTetrimino = new Tetrimino();
     this.gameLoop();
   }
 
@@ -148,6 +151,7 @@ export class Game {
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     this.board.draw(this.ctx);
     this.tetrimino.draw(this.ctx);
+    this.drawPreview();
   }
 
   moveTetrimino(deltaX, deltaY) {
@@ -157,7 +161,8 @@ export class Game {
     } else if (deltaY > 0) {
       const above = this.board.mergeTetrimino(this.tetrimino);
       this.board.clearLines();
-      this.tetrimino = new Tetrimino();
+      this.tetrimino = this.nextTetrimino;
+      this.nextTetrimino = new Tetrimino();
 
       if (above || this.board.hasCollision(this.tetrimino)) {
         this.gameOver();
@@ -205,6 +210,24 @@ export class Game {
     // this.tetrimino.y = originalY;
   }
 
+  drawPreview() {
+    if (!this.previewCtx) return;
+    const ctx = this.previewCtx;
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+    const tet = this.nextTetrimino;
+    const cell = this.board.cellSize;
+    for (let y = 0; y < tet.size; y++) {
+      for (let x = 0; x < tet.size; x++) {
+        if (tet.matrix[y][x]) {
+          ctx.fillStyle = tet.color;
+          ctx.fillRect(x * cell, y * cell, cell, cell);
+          ctx.strokeStyle = "#222";
+          ctx.strokeRect(x * cell, y * cell, cell, cell);
+        }
+      }
+    }
+  }
+
   gameOver() {
     alert("Game Over");
     cancelAnimationFrame(this.gameLoopId);
@@ -214,3 +237,4 @@ export class Game {
     this.tetrimino = new Tetrimino();
   }
 }
+
